@@ -16,16 +16,18 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
-const SORT_ORIGINAL = 'original';
-const SORT_ALPHABETICALLY = 'alphabetical';
-const SORT_LENGTH = 'length';
+enum SortType {
+  SORT_ORIGINAL = 'original',
+  SORT_ALPHABETICALLY = 'alphabetical',
+  SORT_LENGTH = 'length',
+}
 
 export const App: React.FC = () => {
   const [visibleGoods, setVisibleGoods] = useState<string[]>(goodsFromServer);
-  const [sortOrder, setSortOrder] = useState(SORT_ORIGINAL);
+  const [sortOrder, setSortOrder] = useState(SortType.SORT_ORIGINAL);
   const [isReversed, setIsReversed] = useState(false);
 
-  const applySorting = (sortedGoods: string[], order: string) => {
+  const applySorting = (sortedGoods: string[], order: SortType) => {
     setVisibleGoods(isReversed ? [...sortedGoods].reverse() : sortedGoods);
     setSortOrder(order);
   };
@@ -33,7 +35,7 @@ export const App: React.FC = () => {
   const sortGoodsAlphabetically = () => {
     applySorting(
       [...visibleGoods].sort((good1, good2) => good1.localeCompare(good2)),
-      SORT_ALPHABETICALLY,
+      SortType.SORT_ALPHABETICALLY,
     );
   };
 
@@ -42,7 +44,7 @@ export const App: React.FC = () => {
       (good1, good2) => good1.length - good2.length,
     );
 
-    applySorting(sortedGoods, SORT_LENGTH);
+    applySorting(sortedGoods, SortType.SORT_LENGTH);
   };
 
   const reverseGoods = () => {
@@ -52,7 +54,7 @@ export const App: React.FC = () => {
 
   const resetGoods = () => {
     setVisibleGoods(goodsFromServer);
-    setSortOrder(SORT_ORIGINAL);
+    setSortOrder(SortType.SORT_ORIGINAL);
     setIsReversed(false);
   };
 
@@ -61,7 +63,7 @@ export const App: React.FC = () => {
       <div className="buttons">
         <button
           type="button"
-          className={`button is-info ${sortOrder === SORT_ALPHABETICALLY ? '' : 'is-light'}`}
+          className={`button is-info ${sortOrder === SortType.SORT_ALPHABETICALLY ? '' : 'is-light'}`}
           onClick={sortGoodsAlphabetically}
         >
           Sort alphabetically
@@ -69,7 +71,7 @@ export const App: React.FC = () => {
 
         <button
           type="button"
-          className={`button is-success ${sortOrder === SORT_LENGTH ? '' : 'is-light'}`}
+          className={`button is-success ${sortOrder === SortType.SORT_LENGTH ? '' : 'is-light'}`}
           onClick={sortGoodsByLength}
         >
           Sort by length
@@ -83,7 +85,7 @@ export const App: React.FC = () => {
           Reverse
         </button>
 
-        {sortOrder !== SORT_ORIGINAL || isReversed ? (
+        {sortOrder !== SortType.SORT_ORIGINAL || isReversed ? (
           <button
             type="button"
             className="button is-danger is-light"
